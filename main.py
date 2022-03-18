@@ -6,7 +6,7 @@ import re
 from matchms.filtering import default_filters
 import gensim
 
-data = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/ALL_GNPS_15_12_2021_positive_annotated.pickle")
+#data = pd.read_pickle("yourfilepath")
 
 
 def metadata_processing(spectrum):
