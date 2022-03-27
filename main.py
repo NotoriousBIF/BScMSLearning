@@ -4,9 +4,12 @@ import pandas as pd
 from collections import Counter
 import re
 from matchms.filtering import default_filters
+import os
 import gensim
 
-#data = pd.read_pickle("yourfilepath")
+path_data = "..." #enter path here
+fileloc = os.path.join(path_data, "ALL_GNPS_15_12_2021_positive_annotated.pickle")
+data = pd.read_pickle(fileloc)
 
 
 def metadata_processing(spectrum):
@@ -62,7 +65,7 @@ analyzerAliases["Ion Trap"] = iontrap
 def dict_comparer(dict1, dict2, dict3):
     """Takes a dictionary containing list values and compare those list values to keys of another dictionary.
     The values associated with the second dictionary are counted.
-     The key from the first dictionary and the sum are put into a third dictionary. """
+    The key from the first dictionary and the sum are put into a third dictionary. """
     for methd in dict1:
         type_count = 0
         analyzer_list = dict1.get(methd)
@@ -74,4 +77,40 @@ def dict_comparer(dict1, dict2, dict3):
 
 dict_comparer(analyzerAliases, type_occurrences, analyzerCategories)
 
+#maybe change this to a function that can extract any desired combination of metadata fields per spectrum#
+def extractType_and_Weight(data):
+    """Takes the list of spectra and returns a list of tuples containing the instrument type and the parent
+    mass associated with a particular spectrum"""
+    types_and_weights = []
+    for d in data:
+        currentpair = ()
+        insttype = d.get("source_instrument")
+        pmass = d.get("parent_mass")
+        currentpair = (insttype, pmass)
+        types_and_weights.append(currentpair)
+    return types_and_weights
 
+def massSorter(x,y):
+    """Takes a dictionary containing aliases as its x-argument and a list containing spectral metadata as its y-arg.
+    sorts every list entry based on the instrument-type and returns a dictionary with the key being instrument-type
+    category and the values are the associated parent mass."""
+    outputdict = {}
+    for kv in x:
+        outputlst = []
+        aliasList = x.get(kv)
+        for tup in y:
+            if tup[0] in aliasList:
+                outputlst.append(tup[1])
+            else:
+                pass
+        outputdict[kv] = outputlst
+    return outputdict
+
+#used for producing a histogram
+# colors = ['blue', 'violet', 'orange', 'green', 'red]
+# labels = ['Orbitrap', 'Fourier Transform', 'Quadrupole', 'Ion Trap', 'TOF']
+#plt.figure(figsize = (10,5), dpi=150, tight_layout=True)
+#plt.ylabel('Density')
+#plt.xlabel('Parent Mass')
+#plt.hist(lweights, histtype='step', density=True, bins=300, align='mid', color=colors, label=labels)
+#plt.legend()
