@@ -4,14 +4,12 @@ import os
 import pickle
 
 
-
 def instrNames(x):
     """Extracts all of the unique instrument type entries and returns a list of tuples in the form [(x1,y1),..,(xn,yn)]
     with x being a unique entry and y the amount of times it occurs in the dataset"""
     instType = [i.get("source_instrument") for i in x]
     type_occs = Counter(instType).items()
     return type_occs
-
 
 
 def keywordCreation(x):
@@ -23,7 +21,6 @@ def keywordCreation(x):
     case-sensitivity and then moves on to the next set of keywords or returns a list of regexp objects"""
 
 
-
 def aliasCreation(x,y):
     """Takes a list of regexp objects as x and the list of instrument type entries as y. Returns a dictionary with all
     known aliases. Key:value pairs are category:entries, e.g. TOF:ESI-qToF, Esi-QTOF, ESI-qtof. Checks for duplicates,
@@ -31,6 +28,7 @@ def aliasCreation(x,y):
     the duplicate should be placed"""
 
 
+    
 def instrFilter(x,y):
     """takes aliases(dictionary) as x and the to be filtered dataset as y. returns a dictionary with the sorted
     spectra as values and the instrument-type category as key"""
@@ -46,11 +44,11 @@ def instrFilter(x,y):
         outputdict[kv] = outputlist
     return outputdict
 
+
 def subsetCreation(x,y):
     """Takes output from instrFilter as its x-arg and the desired category as y. Returns a list of spectra"""
     output = x.get(y)
     return output
-
 
 
 def exportAsPickle(x,y):
