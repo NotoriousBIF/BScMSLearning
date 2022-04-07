@@ -12,22 +12,17 @@ def count_instrument_types(data):
     type_occurrences = Counter(instrument_type).items()
     return type_occurrences
 
-
 def unzip_types_occurrences(types_occurrences):
     """Takes the input from count_instrument_types and returns two lists, one list contains all the different spellings
     for the instrument types and the other the amount of times it occurs. Output is two lists"""
     names, occurrences = zip(*types_occurrences)
     return names, occurrences
 
-
-
 def create_keyword_list(regexp_list, name_list):
     """This function uses the regexp objects defined above and the list of names output by unzip_types_occurrences.
     returns a list of all the matches between the search terms and the instrument type entries found in the dataset"""
     match_list = list(filter(regexp_list.match, name_list))
     return match_list
-
-
 
 def check_for_duplicates(list1, list2):
     """Checks whether there are any duplicates between list1 & list2. Might expand this so more lists can be added"""
@@ -38,7 +33,6 @@ def check_for_duplicates(list1, list2):
             print(element)
     else:
         pass
-
 
 def instrument_filter(instrument_aliases, dataset):
     """takes aliases(dictionary) as x and the to be filtered dataset as y. returns a dictionary with the sorted
@@ -59,7 +53,6 @@ def subset_creation(filtered_dataset, category):
     """Takes output from instrument_filter as filtered_dataset and the desired category as category. Output is a list"""
     output = filtered_dataset.get(category)
     return output
-
 
 def export_as_pickle(subset, file_location, file_name):
     """Exports the produced subset as a pickle file. Takes the subset (list) as its x, the desired file location as y.

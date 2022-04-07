@@ -8,19 +8,26 @@ def create_sets(master_subset: list, size_training: float, size_validation: floa
     size_training: Size of desired training set. Expected argument is percentage as float e.g. 0.8
     size_validation: Size of desired validation set. Same expectancies as size_training
     size_testing: Size of desired testing set. Same expectancies as size_training
-    Returns: three list objects of specified size."""
+    Returns: three list objects of specified size containing spectra"""
     testing_amount = math.floor(size_testing*len(master_subset))
     validation_amount = math.floor(size_validation*len(master_subset))
     training_amount = math.floor(size_training*len(master_subset))
-    currentset = master_subset.copy()
+    while (testing_amount+validation_amount+training_amount) != len(master_subset):
+        training_amount += 1
+
+    print(training_amount+testing_amount+validation_amount)
+    currentset = [d.get('spectrumid') for d in master_subset]
     while len(currentset) != 0:
         test_proposed = random.sample(currentset, testing_amount)
+        print(test_proposed[1])
         for spectrum in test_proposed:
             currentset.remove(spectrum)
         validation_proposed = random.sample(currentset, validation_amount)
+        print(validation_proposed[1])
         for s in validation_proposed:
             currentset.remove(s)
         training_proposed = random.sample(currentset, training_amount)
+        print(training_proposed[1])
         for i in training_proposed:
             currentset.remove(i)
     return training_proposed, validation_proposed, test_proposed
