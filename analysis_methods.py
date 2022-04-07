@@ -94,6 +94,7 @@ def generate_scores_matrix(testingset: list, ms2deepscore_model, tanimoto_df):
     spectrum_ids = [d.get('spectrumid') for d in testingset]
     #this is the part where we populate the output matrix
     for id in spectrum_ids:
+        print(id)
         rows = {}
         for s in spectrum_ids:
             current_spectrum_1 = spectrum_ids.index(id)
