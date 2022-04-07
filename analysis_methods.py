@@ -2,35 +2,46 @@ import random
 import math
 from ms2deepscore import MS2DeepScore
 
+
+
 def create_sets(master_subset: list, size_training: float, size_validation: float, size_testing: float):
     """this method randomly splits a subset into user-defined portions for training, validation and testing.
     master_subset: Subset which you want to split into separate parts
     size_training: Size of desired training set. Expected argument is percentage as float e.g. 0.8
     size_validation: Size of desired validation set. Same expectancies as size_training
     size_testing: Size of desired testing set. Same expectancies as size_training
-    Returns: three list objects of specified size containing spectra"""
+    Returns: a dictionary with each subset sorted under its own key"""
     testing_amount = math.floor(size_testing*len(master_subset))
     validation_amount = math.floor(size_validation*len(master_subset))
     training_amount = math.floor(size_training*len(master_subset))
     while (testing_amount+validation_amount+training_amount) != len(master_subset):
         training_amount += 1
-
-    print(training_amount+testing_amount+validation_amount)
+    sets_dictionary = {}
     currentset = [d.get('spectrumid') for d in master_subset]
     while len(currentset) != 0:
         test_proposed = random.sample(currentset, testing_amount)
-        print(test_proposed[1])
-        for spectrum in test_proposed:
-            currentset.remove(spectrum)
+        for spectrumid in test_proposed:
+            currentset.remove(spectrumid)
         validation_proposed = random.sample(currentset, validation_amount)
-        print(validation_proposed[1])
         for s in validation_proposed:
             currentset.remove(s)
         training_proposed = random.sample(currentset, training_amount)
-        print(training_proposed[1])
         for i in training_proposed:
             currentset.remove(i)
-    return training_proposed, validation_proposed, test_proposed
+    sets_dictionary['testing'] = test_proposed
+    sets_dictionary['validation'] = validation_proposed
+    sets_dictionary['training'] = training_proposed
+    output_dictionary = {}
+    for category in sets_dictionary:
+        output_list = []
+        id_list = sets_dictionary.get(category)
+        for spectrum in master_subset:
+            if spectrum.get('spectrumid') in id_list:
+                output_list.append(spectrum)
+            else:
+                pass
+        output_dictionary[category] = output_list
+    return output_dictionary
 
 
 def create_pairs(testingset: list):
