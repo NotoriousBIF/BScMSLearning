@@ -3,7 +3,7 @@ import re
 import os
 import pickle
 import pandas as pd
-spectra = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/ALL_GNPS_15_12_2021_positive_annotated.pickle")
+
 
 def count_instrument_types(data):
     """Extracts all of the unique instrument type entries and returns a list of tuples in the form [(x1,y1),..,(xn,yn)]
@@ -11,7 +11,7 @@ def count_instrument_types(data):
     instrument_type = [i.get("source_instrument") for i in data]
     type_occurrences = Counter(instrument_type).items()
     return type_occurrences
-occurrences_list = count_instrument_types(spectra)
+
 
 def unzip_types_occurrences(types_occurrences):
     """Takes the input from count_instrument_types and returns two lists, one list contains all the different spellings
@@ -19,13 +19,7 @@ def unzip_types_occurrences(types_occurrences):
     names, occurrences = zip(*types_occurrences)
     return names, occurrences
 
-"""Over here I declare my default search list (which is specific to this dataset, ideally I would add a method that 
-allows for easy creation of new keywords"""
-orbitrap_regexp_terms = re.compile(".*orbitrap.*|.*hcd.*|.*q-exactive.*|.*lumos.*|.*velos.*", re.IGNORECASE)
-tof_regexp_terms = re.compile(".*tof.*|.*impact*", re.IGNORECASE)
-ft_regexp_terms = re.compile(".*FT.*", re.IGNORECASE)
-quadrupole_regexp_terms = re.compile(".*QQQ.*|.*QQ.*|.*Quadrupole.*", re.IGNORECASE)
-iontrap_regexp_terms = re.compile(".*Ion trap.*|.*IT$", re.IGNORECASE)
+
 
 def create_keyword_list(regexp_list, name_list):
     """This function uses the regexp objects defined above and the list of names output by unzip_types_occurrences.
@@ -33,15 +27,7 @@ def create_keyword_list(regexp_list, name_list):
     match_list = list(filter(regexp_list.match, name_list))
     return match_list
 
-"""Over here I make the match lists for every instrument category. As a handy in-between function I added a method that
-checks for duplicates"""
-instrument_entries, occurrences = unzip_types_occurrences(occurrences_list)
 
-orbitrap_matches = create_keyword_list(orbitrap_regexp_terms, instrument_entries)
-tof_matches = create_keyword_list(tof_regexp_terms, instrument_entries)
-ft_matches = create_keyword_list(ft_regexp_terms, instrument_entries)
-quadrupole_matches = create_keyword_list(quadrupole_regexp_terms, instrument_entries)
-iontrap_matches = create_keyword_list(iontrap_regexp_terms, instrument_entries)
 
 def check_for_duplicates(list1, list2):
     """Checks whether there are any duplicates between list1 & list2. Might expand this so more lists can be added"""
@@ -52,20 +38,6 @@ def check_for_duplicates(list1, list2):
             print(element)
     else:
         pass
-
-"""From checking my own data I found I missed one instrument entry and another was misplaced. So down below I correct
-that. Ideally I would also use a function for this but I would have to think about how to get that working."""
-quadrupole_matches.append('ESI-LC-ESI-Q')
-iontrap_matches.remove('ESI-IT-FT/ion trap with FTMS')
-
-"""For now I removed alias_creation and just use this snippet of code to make a dictionary with aliases. Later on I 
-might add a function that does this automatically"""
-instrument_aliases = {}
-instrument_aliases["Orbitrap"] = orbitrap_matches
-instrument_aliases["TOF"] = tof_matches
-instrument_aliases["Fourier Transform"] = ft_matches
-instrument_aliases["Quadrupole"] = quadrupole_matches
-instrument_aliases["Ion Trap"] = iontrap_matches
 
 
 def instrument_filter(instrument_aliases, dataset):
@@ -96,4 +68,39 @@ def export_as_pickle(subset, file_location, file_name):
     file_export_pickle = os.path.join(file_location, file_name + ".pickle")
     pickle.dump(subset, open(file_export_pickle, "wb"))
     return "Saved as: " + file_name
+
+if __name__ == '__main__':
+    spectra = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/ALL_GNPS_15_12_2021_positive_annotated.pickle")
+    occurrences_list = count_instrument_types(spectra)
+    """Over here I declare my default search list (which is specific to this dataset, ideally I would add a method that 
+    allows for easy creation of new keywords"""
+    orbitrap_regexp_terms = re.compile(".*orbitrap.*|.*hcd.*|.*q-exactive.*|.*lumos.*|.*velos.*", re.IGNORECASE)
+    tof_regexp_terms = re.compile(".*tof.*|.*impact*", re.IGNORECASE)
+    ft_regexp_terms = re.compile(".*FT.*", re.IGNORECASE)
+    quadrupole_regexp_terms = re.compile(".*QQQ.*|.*QQ.*|.*Quadrupole.*", re.IGNORECASE)
+    iontrap_regexp_terms = re.compile(".*Ion trap.*|.*IT$", re.IGNORECASE)
+
+    """Over here I make the match lists for every instrument category. As a handy in-between function I added a method that
+    checks for duplicates"""
+    instrument_entries, occurrences = unzip_types_occurrences(occurrences_list)
+
+    orbitrap_matches = create_keyword_list(orbitrap_regexp_terms, instrument_entries)
+    tof_matches = create_keyword_list(tof_regexp_terms, instrument_entries)
+    ft_matches = create_keyword_list(ft_regexp_terms, instrument_entries)
+    quadrupole_matches = create_keyword_list(quadrupole_regexp_terms, instrument_entries)
+    iontrap_matches = create_keyword_list(iontrap_regexp_terms, instrument_entries)
+
+    """From checking my own data I found I missed one instrument entry and another was misplaced. So down below I correct
+    that. Ideally I would also use a function for this but I would have to think about how to get that working."""
+    quadrupole_matches.append('ESI-LC-ESI-Q')
+    iontrap_matches.remove('ESI-IT-FT/ion trap with FTMS')
+
+    """For now I removed alias_creation and just use this snippet of code to make a dictionary with aliases. Later on I 
+    might add a function that does this automatically"""
+    instrument_aliases = {}
+    instrument_aliases["Orbitrap"] = orbitrap_matches
+    instrument_aliases["TOF"] = tof_matches
+    instrument_aliases["Fourier Transform"] = ft_matches
+    instrument_aliases["Quadrupole"] = quadrupole_matches
+    instrument_aliases["Ion Trap"] = iontrap_matches
 
