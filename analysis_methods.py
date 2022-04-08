@@ -87,7 +87,7 @@ def generate_scores_matrix(testingset: list, ms2deepscore_model, tanimoto_df):
     ms2deepscore_model: The MS2DeepScore model that will predict these similarity measures
     tanimoto_df: A dataframe containing the correct similarity measures
     Returns: A matrix with each field consisting of a list, in format [INCHI Spectrum 1, INCHI Spectrum 2,
-    Predicted score, true score]. Column and row names will be the spectrum IDs."""
+    Predicted score, true score, deviation]. Column and row names will be the spectrum IDs."""
     similarity_measure = MS2DeepScore(ms2deepscore_model)
     predicted_score_matrix = similarity_measure.matrix(testingset[:], testingset[:])
     final_score_matrix = {}
@@ -103,7 +103,8 @@ def generate_scores_matrix(testingset: list, ms2deepscore_model, tanimoto_df):
             current_inchikey_1 = (testingset[current_spectrum_1].get("inchikey"))[0:14]
             current_inchikey_2 = (testingset[current_spectrum_2].get('inchikey'))[0:14]
             current_true_score = tanimoto_df[current_inchikey_1].get(current_inchikey_2)
-            entry = [current_inchikey_1, current_inchikey_2, current_predicted_score, current_true_score]
+            deviation = current_predicted_score - current_true_score
+            entry = [current_inchikey_1, current_inchikey_2, current_predicted_score, current_true_score, deviation]
             rows.update({s: entry})
         final_score_matrix[id] = rows
     return final_score_matrix
@@ -123,7 +124,12 @@ def calculate_errors_pairs(list_of_scores):
         output_list.append(error)
     return output_list
 
-def calculate_errors_matrix(score_matrix):
+def extract_errors_from_matrix(score_matrix):
     """This function calculates the difference between the predicted and the true score.
      score_matrix: the output from generate_scores_matrix
-     returns: a matrix of residuals."""
+     returns: a list of residuals."""
+    output_list = []
+    for spectrumid1, spectrumid2 in score_matrix:
+        current_score = spectrumid2[4]
+        output_list.append(current_score)
+    return output_list
