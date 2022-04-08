@@ -109,10 +109,10 @@ def generate_scores_matrix(testingset: list, ms2deepscore_model, tanimoto_df):
     return final_score_matrix
 
 
-def calculate_errors(list_of_scores):
-    """This function takes the output from generate_scores and calculates the difference between the predicted score and
+def calculate_errors_pairs(list_of_scores):
+    """This function takes the output from generate_scores_pairs and calculates the difference between the predicted score and
     the true score.
-    list_of_scores: a list of predicted and calculated scores
+    list_of_scores: a list of predicted and calculated scores in pairs
     returns: a list of residuals"""
     output_list = []
     for entry in range(len(list_of_scores)):
@@ -122,3 +122,8 @@ def calculate_errors(list_of_scores):
         error = true_score - predicted_score
         output_list.append(error)
     return output_list
+
+def calculate_errors_matrix(score_matrix):
+    """This function calculates the difference between the predicted and the true score.
+     score_matrix: the output from generate_scores_matrix
+     returns: a matrix of residuals."""
