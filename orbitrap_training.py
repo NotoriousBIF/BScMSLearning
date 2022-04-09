@@ -26,9 +26,7 @@ orbitrap_only = instrument_filter(instrument_aliases, all_spectra)
 orbitrap_spectra = subset_creation(orbitrap_only, 'Orbitrap')
 
 sorted_random_subsets = create_sets(orbitrap_spectra, 0.8, 0.1, 0.1)
-orbitrap_training = subset_creation(sorted_random_subsets, 'training')
-orbitrap_validation = subset_creation(sorted_random_subsets, 'validation')
-orbitrap_testing = subset_creation(sorted_random_subsets, 'testing')
+orbitrap_training, orbitrap_validation, orbitrap_testing = create_sets(orbitrap_spectra, 0.8, 0.1, 0.1)
 
 #saving our subsets for later use
 export_as_pickle(orbitrap_training, 'G:/Remco Bsc Thesis/Datafiles', 'orbitrap_trainingset')
