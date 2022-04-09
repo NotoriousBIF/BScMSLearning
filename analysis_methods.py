@@ -113,4 +113,3 @@ def extract_errors_from_matrix(score_matrix):
         current_score = spectrumid2[4]
         output_list.append(current_score)
     return output_list
-
