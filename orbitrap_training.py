@@ -19,14 +19,15 @@ occurrences_list = count_instrument_types(all_spectra)
 orbitrap_regexp_terms = re.compile(".*orbitrap.*|.*hcd.*|.*q-exactive.*|.*lumos.*|.*velos.*", re.IGNORECASE)
 instrument_entries, occurrences = unzip_types_occurrences(occurrences_list)
 orbitrap_matches = create_keyword_list(orbitrap_regexp_terms, instrument_entries)
+#I noticed there was one keyword containing APCI, removing this since for now we're only using ESI
+orbitrap_matches.remove('APCI-Orbitrap')
 instrument_aliases = {}
 instrument_aliases["Orbitrap"] = orbitrap_matches
 
 orbitrap_only = instrument_filter(instrument_aliases, all_spectra)
 orbitrap_spectra = subset_creation(orbitrap_only, 'Orbitrap')
 
-sorted_random_subsets = create_sets(orbitrap_spectra, 0.8, 0.1, 0.1)
-orbitrap_training, orbitrap_validation, orbitrap_testing = create_sets(orbitrap_spectra, 0.8, 0.1, 0.1)
+orbitrap_training, orbitrap_validation, orbitrap_testing = create_sets(orbitrap_spectra, 0.89, 0.1, 0.01)
 
 #saving our subsets for later use
 export_as_pickle(orbitrap_training, 'G:/Remco Bsc Thesis/Datafiles', 'orbitrap_trainingset')
@@ -64,7 +65,7 @@ history = model.model.fit(training_generator, validation_data=validation_generat
                           epochs=150, verbose=1, callbacks=[earlystopper_scoring_net])
 
 model_path = 'G:/Remco Bsc Thesis/Models/'
-model_file_name = os.path.join(model_path, "ms2deepscore_model_orbitrap.hdf5")
+model_file_name = os.path.join(model_path, "ms2deepscore_model_orbitrap_v2.hdf5")
 model.save(model_file_name)
 
 from matplotlib import pyplot as plt
