@@ -13,14 +13,14 @@ def create_sets(master_subset: list, size_training: float, size_validation: floa
     testing_amount = math.floor(size_testing*len(master_subset))
     validation_amount = math.floor(size_validation*len(master_subset))
     training_amount = math.floor(size_training*len(master_subset))
-    spectrum_ids = [d.get('spectrumid') for d in master_subset]
-    testing_proposed = random.sample(spectrum_ids, testing_amount)
-    validation_and_training = list(set(spectrum_ids) - set(testing_proposed))
-    validation_proposed = random.sample(validation_and_training, validation_amount)
-    training_proposed = list(set(validation_and_training) - set(validation_proposed))
-    training_final = list(filter(lambda x: x.get('spectrumid') in training_proposed, master_subset))
-    validation_final = list(filter(lambda x: x.get('spectrumid') in validation_proposed, master_subset))
-    testing_final = list(filter(lambda x: x.get('spectrumid') in testing_proposed, master_subset))
+    index_list = [n for n in range(len(master_subset))]
+    random.shuffle(index_list)
+    testing_proposed = index_list[:testing_amount]
+    validation_proposed = index_list[testing_amount:(testing_amount+validation_amount)]
+    training_proposed = index_list[(testing_amount+validation_amount):]
+    training_final = [master_subset[i] for i in training_proposed]
+    validation_final = [master_subset[x] for x in validation_proposed]
+    testing_final = [master_subset[y] for y in testing_proposed]
     return training_final, validation_final, testing_final
 
 
@@ -113,3 +113,4 @@ def extract_errors_from_matrix(score_matrix):
         current_score = spectrumid2[4]
         output_list.append(current_score)
     return output_list
+
