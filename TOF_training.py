@@ -19,6 +19,9 @@ occurrences_list = count_instrument_types(all_spectra)
 tof_regexp_terms = re.compile(".*tof.*|.*impact*", re.IGNORECASE)
 instrument_entries, occurrences = unzip_types_occurrences(occurrences_list)
 tof_matches = create_keyword_list(tof_regexp_terms, instrument_entries)
+#removing APCI matches
+tof_matches.remove('LC-APCI-qTof')
+tof_matches.remove('APCI-qTof')
 instrument_aliases = {}
 instrument_aliases["TOF"] = tof_matches
 
