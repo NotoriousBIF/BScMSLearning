@@ -28,7 +28,7 @@ instrument_aliases["TOF"] = tof_matches
 TOF_only = instrument_filter(instrument_aliases, all_spectra)
 TOF_spectra = subset_creation(TOF_only, 'TOF')
 
-TOF_training, TOF_validation, TOF_testing = create_sets(TOF_spectra, 0.87, 0.1, 0.03)
+TOF_training, TOF_validation, TOF_testing = create_sets(TOF_spectra, 0.8, 0.1, 0.1)
 #saving our subsets for later use
 export_as_pickle(TOF_training, 'G:/Remco Bsc Thesis/Datafiles', 'TOF_trainingset')
 export_as_pickle(TOF_validation, 'G:/Remco Bsc Thesis/Datafiles', 'TOF_validationset')
