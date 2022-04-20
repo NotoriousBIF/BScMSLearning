@@ -114,3 +114,55 @@ def extract_errors_from_matrix(score_matrix):
         output_list.append(current_score)
     return output_list
 
+from typing import List
+from matchms import Spectrum
+import pandas as pd
+import numpy as np
+
+def select_predictions_for_test_spectra(tanimoto_df: pd.DataFrame,
+                                        test_spectra: List[Spectrum]) -> np.ndarray:
+    """Select the predictions for test_spectra from df with correct predictions
+
+    tanimoto_df:
+        Dataframe with as index and columns Inchikeys of 14 letters
+    test_spectra:
+        list of test spectra
+    """
+    inchikey_idx_test = np.zeros(len(test_spectra))
+    for i, spec in enumerate(test_spectra):
+        inchikey_idx_test[i] = np.where(tanimoto_df.index.values == spec.get("inchikey")[:14])[0]
+
+    inchikey_idx_test = inchikey_idx_test.astype("int")
+    scores_ref = tanimoto_df.values[np.ix_(inchikey_idx_test[:], inchikey_idx_test[:])].copy()
+    return scores_ref
+
+def tanimoto_dependent_losses(scores, scores_ref, ref_score_bins):
+    """Compute errors (RMSE and MSE) for different bins of the reference scores (scores_ref).
+
+    Parameters
+    ----------
+
+    scores
+        Scores that should be evaluated
+    scores_ref
+        Reference scores (= ground truth).
+    ref_score_bins
+        Bins for the refernce score to evaluate the performance of scores.
+    """
+    bin_content = []
+    rmses = []
+    maes = []
+    bounds = []
+    ref_scores_bins_inclusive = ref_score_bins.copy()
+    ref_scores_bins_inclusive[0] = -np.inf
+    ref_scores_bins_inclusive[-1] = np.inf
+    for i in range(len(ref_scores_bins_inclusive) - 1):
+        low = ref_scores_bins_inclusive[i]
+        high = ref_scores_bins_inclusive[i + 1]
+        bounds.append((low, high))
+        idx = np.where((scores_ref >= low) & (scores_ref < high))
+        bin_content.append(idx[0].shape[0])
+        maes.append(np.abs(scores_ref[idx] - scores[idx]).mean())
+        rmses.append(np.sqrt(np.square(scores_ref[idx] - scores[idx]).mean()))
+    return bin_content, bounds, rmses, maes
+
