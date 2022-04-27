@@ -8,3 +8,4 @@ import analysis_methods
 
 #generic vs TOF
 
+#generic vs quadrupole

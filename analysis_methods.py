@@ -166,3 +166,28 @@ def tanimoto_dependent_losses(scores, scores_ref, ref_score_bins):
         rmses.append(np.sqrt(np.square(scores_ref[idx] - scores[idx]).mean()))
     return bin_content, bounds, rmses, maes
 
+def calculate_bins(bin_amount):
+    output = []
+    for n in range(1, bin_amount+1):
+        current_number = round(n/bin_amount, 2)
+        output.append(current_number)
+    return output
+
+def generate_results(ms2deepscore_model, testspectra, tanimoto_df, amount_of_bins):
+    """Combines earlier functions to easily compute results for a ms2deepscore model on a given testset
+     ms2deepscore_model: the model you want to use for predictions
+     testspectra: the spectra you want to test performance on
+     tanimoto_df: the dataframa containing the true scores
+     amount_of_bins: the amount of bins you want to distribute the errors over
+     returns: list with the output from tanimoto_independent_losses and the average RMSE"""
+    bins = calculate_bins(amount_of_bins)
+    similarity_measure = MS2DeepScore(ms2deepscore_model)
+    predicted_scores = similarity_measure.matrix(testspectra[:], testspectra[:])
+    true_scores = select_predictions_for_test_spectra(tanimoto_df, testspectra)
+    bin_content, bounds, rmses, maes = tanimoto_dependent_losses(predicted_scores, true_scores, bins)
+    global_rmse = sum(rmses)/len(rmses)
+    output = [bin_content, bounds, rmses, maes, global_rmse]
+    return output
+
+
+
