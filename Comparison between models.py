@@ -1,15 +1,14 @@
 from analysis_methods import *
 import pandas as pd
 from ms2deepscore.models import load_model
-from ms2deepscore.models import SiameseModel
 
 tanimoto_scores = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/Tanimoto scores/GNPS_15_12_2021_pos_tanimoto_scores.pickle")
 bin_amount = 10
 generic_model = load_model("G:/Remco Bsc Thesis/Models/ms2deepscore_model_generic.hdf5")
 
 #generic vs orbitrap
-orbitrap_testing = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/Subsets/Orbitrap model v2 sets/orbitrap_testingset.pickle")
-orbitrap_model = load_model("G:/Remco Bsc Thesis/Models/ms2deepscore_model_orbitrap_v2.hdf5")
+orbitrap_testing = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/Subsets/Orbitrap model v1 sets/orbitrap_testingset.pickle")
+orbitrap_model = load_model("G:/Remco Bsc Thesis/Models/ms2deepscore_model_orbitrap.hdf5")
 orbitrap_results = generate_results(orbitrap_model, orbitrap_testing, tanimoto_scores, bin_amount)
 generic_orbitrap_results = generate_results(generic_model, orbitrap_testing, tanimoto_scores, bin_amount)
 #generic vs Fourier Transform
