@@ -17,8 +17,8 @@ ft_model = load_model("G:/Remco Bsc Thesis/Models/ms2deepscore_model_ft.hdf5")
 ft_results = generate_results(ft_model, ft_testing, tanimoto_scores, bin_amount)
 generic_ft_results = generate_results(generic_model, ft_testing, tanimoto_scores, bin_amount)
 #generic vs TOF
-tof_testing = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/Subsets/TOF v1 set/TOF_testingset.pickle")
-tof_model = load_model("G:/Remco Bsc Thesis/Models/ms2deepscore_model_TOF_v1.hdf5")
+tof_testing = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/TOF_testingset.pickle")
+tof_model = load_model("G:/Remco Bsc Thesis/Models/ms2deepscore_model.hdf5")
 tof_results = generate_results(tof_model, tof_testing, tanimoto_scores, bin_amount)
 generic_tof_results = generate_results(generic_model, tof_testing, tanimoto_scores, bin_amount)
 #generic vs quadrupole
