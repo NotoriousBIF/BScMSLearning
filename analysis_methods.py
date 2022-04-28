@@ -168,7 +168,7 @@ def tanimoto_dependent_losses(scores, scores_ref, ref_score_bins):
 
 def calculate_bins(bin_amount):
     output = []
-    for n in range(1, bin_amount):
+    for n in range(1, bin_amount+1):
         current_number = round(n/bin_amount, 2)
         output.append(current_number)
     return output
