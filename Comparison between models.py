@@ -54,7 +54,7 @@ def plot_barplot(generic_global_rmse:list, specific_global_rmse:list):
     output = plt.show()
     return output
 
-def plot_scatter_rmse(generic_rmses:list, specific_rmses:list, figure_name:str):
+def plot_errorbars_rmse(generic_rmses:list, specific_rmses:list, figure_name:str):
     generic_standard_deviation = [n**2 for n in generic_rmses]
     specific_standard_deviation = [n**2 for n in specific_rmses]
     x_labels = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.3", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
@@ -64,6 +64,18 @@ def plot_scatter_rmse(generic_rmses:list, specific_rmses:list, figure_name:str):
     plt.yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
     plt.legend(loc="upper right")
     plt.title(figure_name)
+    output = plt.show()
+    return output
+
+def plot_scatter_rmse(generic_rmses:list, specific_rmses:list, figure_name:str):
+    x_labels = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.3", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
+                "0.8 < 0.9", "0.9 < inf"]
+    plt.scatter(x_labels, generic_rmses, c="b", label="Generic")
+    plt.scatter(x_labels, specific_rmses, c="y", label="Specific")
+    plt.yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+    plt.legend(loc="upper right")
+    plt.title(figure_name)
+    plt.plot()
     output = plt.show()
     return output
 
