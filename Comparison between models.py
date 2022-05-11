@@ -1,6 +1,7 @@
-from analysis_methods import *
+from analysis_methods import generate_results, select_predictions_for_test_spectra, calculate_bins, tanimoto_dependent_losses
 import pandas as pd
 from ms2deepscore.models import load_model
+from matplotlib import pyplot
 
 tanimoto_scores = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/Tanimoto scores/GNPS_15_12_2021_pos_tanimoto_scores.pickle")
 bin_amount = 10
@@ -26,3 +27,5 @@ quadrupole_testing = pd.read_pickle("G:/Remco Bsc Thesis/Datafiles/quadrupole_te
 quadrupole_model = load_model("G:/Remco Bsc Thesis/Models/ms2deepscore_model_quadrupole.hdf5")
 quadrupole_results = generate_results(quadrupole_model, quadrupole_testing, tanimoto_scores, bin_amount)
 generic_quadrupole_results = generate_results(generic_model, quadrupole_testing, tanimoto_scores, bin_amount)
+
+#plots
