@@ -71,11 +71,14 @@ def plot_scatter_rmse(generic_rmses:list, specific_rmses:list, figure_name:str):
     x_labels = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.3", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
                 "0.8 < 0.9", "0.9 < inf"]
     plt.scatter(x_labels, generic_rmses, c="b", label="Generic")
+    plt.plot(x_labels, generic_rmses)
     plt.scatter(x_labels, specific_rmses, c="y", label="Specific")
+    plt.plot(x_labels, specific_rmses)
     plt.yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+    plt.xlabel('Tanimoto scoring bins')
+    plt.ylabel('RSME')
     plt.legend(loc="upper right")
     plt.title(figure_name)
-    plt.plot()
     output = plt.show()
     return output
 
@@ -85,6 +88,9 @@ def plot_scatter_similarities_with_bins(results:list, figure_name:str):
                 "0.8 < 0.9", "0.9 < inf"]
     plt.scatter(x_labels, y_values)
     plt.plot(x_labels, y_values)
+    plt.ylabel('# of spectral pairs')
+    plt.xlabel('Tanimoto scoring bins')
     plt.title(figure_name)
     output = plt.show()
     return output
+
