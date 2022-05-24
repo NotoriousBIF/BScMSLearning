@@ -114,6 +114,7 @@ from collections import Counter
 q_testing = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_testingset.pickle")
 q_training = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_trainingset.pickle")
 q_validation = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_validationset.pickle")
+q_trainingphase = q_training + q_validation
 q_complete = q_testing + q_training + q_validation
 inchis = [d.get("inchikey") for d in q_complete]
 inchikey_occurrences = Counter(inchis)
