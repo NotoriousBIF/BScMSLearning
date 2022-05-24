@@ -54,13 +54,11 @@ def plot_barplot(generic_global_rmse:list, specific_global_rmse:list):
     output = plt.show()
     return output
 
-def plot_errorbars_rmse(generic_rmses:list, specific_rmses:list, figure_name:str):
-    generic_standard_deviation = [n**2 for n in generic_rmses]
-    specific_standard_deviation = [n**2 for n in specific_rmses]
+def plot_errorbars_rmse(generic_rmses:list, specific_rmses:list, figure_name:str, generic_boundaries:list, specific_boundaries:list):
     x_labels = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.3", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
                 "0.8 < 0.9", "0.9 < inf"]
-    plt.errorbar(x_labels, generic_rmses, yerr=generic_standard_deviation, label="Generic")
-    plt.errorbar(x_labels, specific_rmses, yerr=specific_standard_deviation, label="Specific")
+    plt.errorbar(x_labels, generic_rmses, yerr=(generic_boundaries[0],generic_boundaries[1]), label ="Generic")
+    plt.errorbar(x_labels, specific_rmses, yerr=(specific_boundaries[0],specific_boundaries[1]), label="Specific")
     plt.yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
     plt.legend(loc="upper right")
     plt.title(figure_name)
@@ -76,7 +74,7 @@ def plot_scatter_rmse(generic_rmses:list, specific_rmses:list, figure_name:str):
     plt.plot(x_labels, specific_rmses)
     plt.yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
     plt.xlabel('Tanimoto scoring bins')
-    plt.ylabel('RSME')
+    plt.ylabel('RMSE')
     plt.legend(loc="upper right")
     plt.title(figure_name)
     output = plt.show()

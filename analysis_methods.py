@@ -99,5 +99,24 @@ def generate_results(ms2deepscore_model, testspectra, tanimoto_df, amount_of_bin
     output = [bin_content, bounds, rmses, maes, global_rmse]
     return output
 
+def generate_error_bars(rmses:list, bin_sizes:list):
+    lower_bounds = []
+    upper_bounds = []
+    for i in range(len(rmses)):
+        current_lb = rmses[i] * np.sqrt(1-(1 - ((1.96*2**0.5)/(np.sqrt(bin_sizes[i] - 1)))))
+        current_ub = rmses[i] * (np.sqrt(1+((1.96*2**0.5)/np.sqrt(bin_sizes[i] - 1))) - 1)
+        lower_bounds.append(current_lb)
+        upper_bounds.append(current_ub)
+    return lower_bounds, upper_bounds
+
+##uitzoekscripts
+from collections import Counter
+q_testing = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_testingset.pickle")
+q_training = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_trainingset.pickle")
+q_validation = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_validationset.pickle")
+q_complete = q_testing + q_training + q_validation
+inchis = [d.get("inchikey") for d in q_complete]
+inchikey_occurrences = Counter(inchis)
+
 
 
