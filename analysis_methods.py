@@ -92,7 +92,7 @@ def generate_results(ms2deepscore_model, testspectra, tanimoto_df, amount_of_bin
      returns: list with the output from tanimoto_independent_losses and the average RMSE"""
     bins = calculate_bins(amount_of_bins)
     similarity_measure = MS2DeepScore(ms2deepscore_model)
-    predicted_scores = similarity_measure.matrix(testspectra[:], testspectra[:])
+    predicted_scores = similarity_measure.matrix(testspectra[:], testspectra[:], is_symmetric=True)
     true_scores = select_predictions_for_test_spectra(tanimoto_df, testspectra)
     bin_content, bounds, rmses, maes = tanimoto_dependent_losses(predicted_scores, true_scores, bins)
     global_rmse = sum(rmses)/len(rmses)

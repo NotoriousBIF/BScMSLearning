@@ -32,11 +32,6 @@ quadrupole_results = generate_results(quadrupole_model, quadrupole_testing, tani
 generic_quadrupole_results = generate_results(generic_model, quadrupole_testing, tanimoto_scores, bin_amount)
 
 #plots
-def gather_results_for_plots():
-    generic_results = []
-    specific_results = []
-    return generic_results, specific_results
-
 def plot_barplot(generic_global_rmse:list, specific_global_rmse:list):
     fig = plt.subplots(figsize=(12, 8))
     barWidth = 0.25
@@ -54,19 +49,22 @@ def plot_barplot(generic_global_rmse:list, specific_global_rmse:list):
     output = plt.show()
     return output
 
-def plot_errorbars_rmse(generic_rmses:list, specific_rmses:list, figure_name:str, generic_boundaries:list, specific_boundaries:list):
-    x_labels = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.3", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
+def plot_errorbars_rmse(generic_rmses:list, specific_rmses:list, figure_name, generic_boundaries:list, specific_boundaries:list):
+    x_markers = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.4", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
                 "0.8 < 0.9", "0.9 < inf"]
-    plt.errorbar(x_labels, generic_rmses, yerr=(generic_boundaries[0],generic_boundaries[1]), label ="Generic")
-    plt.errorbar(x_labels, specific_rmses, yerr=(specific_boundaries[0],specific_boundaries[1]), label="Specific")
+    plt.errorbar(x_markers, generic_rmses, yerr=(generic_boundaries[0], generic_boundaries[1]), label ="Generic")
+    plt.errorbar(x_markers, specific_rmses, yerr=(specific_boundaries[0], specific_boundaries[1]), label="Specific")
     plt.yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+    plt.ylabel("RMSEs with 95% CI", fontsize=15)
+    plt.xlabel("Tanimoto scoring bins", fontsize=15)
     plt.legend(loc="upper right")
+    plt.grid(True)
     plt.title(figure_name)
     output = plt.show()
     return output
 
 def plot_scatter_rmse(generic_rmses:list, specific_rmses:list, figure_name:str):
-    x_labels = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.3", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
+    x_labels = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.4", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
                 "0.8 < 0.9", "0.9 < inf"]
     plt.scatter(x_labels, generic_rmses, c="b", label="Generic")
     plt.plot(x_labels, generic_rmses)
@@ -82,7 +80,7 @@ def plot_scatter_rmse(generic_rmses:list, specific_rmses:list, figure_name:str):
 
 def plot_scatter_similarities_with_bins(results:list, figure_name:str):
     y_values = results[0]
-    x_labels = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.3", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
+    x_labels = ["-inf < 0.1", "0.1 < 0.2", "0.2 < 0.3", "0.3 < 0.4", "0.4 < 0.5", "0.5 < 0.6", "0.6 < 0.7", "0.7 < 0.8",
                 "0.8 < 0.9", "0.9 < inf"]
     plt.scatter(x_labels, y_values)
     plt.plot(x_labels, y_values)
@@ -91,4 +89,6 @@ def plot_scatter_similarities_with_bins(results:list, figure_name:str):
     plt.title(figure_name)
     output = plt.show()
     return output
+
+from ms2deepscore.plotting import create_histograms_plot
 
