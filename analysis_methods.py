@@ -119,5 +119,7 @@ q_complete = q_testing + q_training + q_validation
 inchis = [d.get("inchikey") for d in q_complete]
 inchikey_occurrences = Counter(inchis)
 
-
+peaks = [d.peaks.intensities.size for d in q_trainingphase]
+average_peak_per_spectrum = sum(peaks)/len(peaks)
+peak_occurrences = Counter(peaks)
 
