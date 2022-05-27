@@ -1,4 +1,5 @@
-from analysis_methods import generate_results, select_predictions_for_test_spectra, calculate_bins, tanimoto_dependent_losses
+from analysis_methods import generate_results, select_predictions_for_test_spectra, \
+    calculate_bins, tanimoto_dependent_losses, generate_error_bars
 import pandas as pd
 from ms2deepscore.models import load_model
 import matplotlib
@@ -91,4 +92,23 @@ def plot_scatter_similarities_with_bins(results:list, figure_name:str):
     return output
 
 from ms2deepscore.plotting import create_histograms_plot
+from ms2deepscore import MS2DeepScore
+similarity_score_generic = MS2DeepScore(generic_model)
+similarity_score_specific = MS2DeepScore()
 
+similarities_test_generic = similarity_score_generic.matrix(ft_testing, ft_testing, is_symmetric=True)
+similarities_test_specific = similarity_score_specific.matrix(ft_testing, ft_testing, is_symmetric=True)
+
+inchikey_idx_test = np.zeros(len(ft_testing))
+for i, spec in enumerate(ft_testing):
+    inchikey_idx_test[i] = np.where(tanimoto_scores.index.values == spec.get("inchikey")[:14])[0]
+
+inchikey_idx_test = inchikey_idx_test.astype("int")
+
+scores_ref = tanimoto_scores.values[np.ix_(inchikey_idx_test[:], inchikey_idx_test[:])].copy()
+
+create_histograms_plot(scores_ref, similarities_test_generic, n_bins=10, hist_resolution=100,
+                          ref_score_name="Tanimoto similarity", compare_score_name="MS2DeepScore (predicted Tanimoto similarity)")
+
+create_histograms_plot(scores_ref, similarities_test_specific, n_bins=10, hist_resolution=100,
+                          ref_score_name="Tanimoto similarity", compare_score_name="MS2DeepScore (predicted Tanimoto similarity)")
