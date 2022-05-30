@@ -103,7 +103,7 @@ def generate_error_bars(rmses:list, bin_sizes:list):
     lower_bounds = []
     upper_bounds = []
     for i in range(len(rmses)):
-        current_lb = rmses[i] * np.sqrt(1-(1 - ((1.96*2**0.5)/(np.sqrt(bin_sizes[i] - 1)))))
+        current_lb = rmses[i] * (1 - np.sqrt((1 - ((1.96*2**0.5)/(np.sqrt(bin_sizes[i] - 1))))))
         current_ub = rmses[i] * (np.sqrt(1+((1.96*2**0.5)/np.sqrt(bin_sizes[i] - 1))) - 1)
         lower_bounds.append(current_lb)
         upper_bounds.append(current_ub)
