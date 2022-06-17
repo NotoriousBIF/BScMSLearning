@@ -116,8 +116,18 @@ q_training = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupol
 q_validation = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_validationset.pickle")
 q_trainingphase = q_training + q_validation
 q_complete = q_testing + q_training + q_validation
+q_test_inchis = [d.get("inchikey") for d in q_testing]
 q_inchis = [d.get("inchikey") for d in q_complete]
 inchikey_occurrences = Counter(q_inchis)
+
+orbitrap_testing = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/Subsets/Orbitrap model v1 sets/orbitrap_testingset.pickle")
+orbitrap_inchikeys = [d.get("inchikey") for d in orbitrap_testing]
+
+TOF_testing = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/TOF_testingset.pickle")
+TOF_inchikeys = [d.get("inchikey") for d in TOF_testing]
+
+ft_testing = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/ft_testingset.pickle")
+ft_inchikeys = [d.get("inchikey") for d in ft_testing]
 
 generic_training = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/generic_trainingset.pickle")
 generic_validation = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/generic_validationset.pickle")
@@ -125,11 +135,15 @@ generic_complete = generic_training + generic_validation
 
 generic_inchis = [d.get("inchikey") for d in generic_complete]
 
-quadrupole_generic_overlapping = set(q_inchis).intersection(set(generic_inchis))
+quadrupole_generic_overlapping = set(q_test_inchis).intersection(set(generic_inchis))
+orbitrap_generic_overlapping = set(orbitrap_inchikeys).intersection(set(generic_inchis))
+tof_generic_overlapping = set(TOF_inchikeys).intersection(set(generic_inchis))
+ft_generic_overlapping = set(ft_inchikeys).intersection(set(generic_inchis))
 
-peaks = [d.peaks.intensities.size for d in q_trainingphase]
-average_peak_per_spectrum = sum(peaks)/len(peaks)
-peak_occurrences = Counter(peaks)
-
-
+def peak_counter(dataset: list):
+    """Returns the average amount of peaks per spectrum for a dataset of any size"""
+    peaks = [d.peaks.intensities.size for d in dataset]
+    average_peaks_per_spectrum = sum(peaks)/len(peaks)
+    peak_occurrences = Counter(peaks)
+    return peaks, average_peaks_per_spectrum, peak_occurrences
 
