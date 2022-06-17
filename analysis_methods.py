@@ -5,6 +5,7 @@ from typing import List
 from matchms import Spectrum
 import pandas as pd
 import numpy as np
+from collections import Counter
 
 def create_sets(master_subset: list, size_training: float, size_validation: float, size_testing: float):
     """this method randomly splits a subset into user-defined portions for training, validation and testing.
@@ -110,16 +111,25 @@ def generate_error_bars(rmses:list, bin_sizes:list):
     return lower_bounds, upper_bounds
 
 ##uitzoekscripts
-from collections import Counter
 q_testing = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_testingset.pickle")
 q_training = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_trainingset.pickle")
 q_validation = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/quadrupole_validationset.pickle")
 q_trainingphase = q_training + q_validation
 q_complete = q_testing + q_training + q_validation
-inchis = [d.get("inchikey") for d in q_complete]
-inchikey_occurrences = Counter(inchis)
+q_inchis = [d.get("inchikey") for d in q_complete]
+inchikey_occurrences = Counter(q_inchis)
+
+generic_training = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/generic_trainingset.pickle")
+generic_validation = pd.read_pickle("C:/Users/remco/Documents/Thesis/Datafiles/generic_validationset.pickle")
+generic_complete = generic_training + generic_validation
+
+generic_inchis = [d.get("inchikey") for d in generic_complete]
+
+quadrupole_generic_overlapping = set(q_inchis).intersection(set(generic_inchis))
 
 peaks = [d.peaks.intensities.size for d in q_trainingphase]
 average_peak_per_spectrum = sum(peaks)/len(peaks)
 peak_occurrences = Counter(peaks)
+
+
 
