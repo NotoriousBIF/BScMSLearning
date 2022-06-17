@@ -101,6 +101,10 @@ def generate_results(ms2deepscore_model, testspectra, tanimoto_df, amount_of_bin
     return output
 
 def generate_error_bars(rmses:list, bin_sizes:list):
+    """"Generates errorbars per RMSE for a specific bin
+    rmses: This is a list containing the RMSEs calculated in generate_results.
+    bin_sizes: List containing the sizes of the bins, e.g. bin_sizes[0] = 450 because you had 450 pairs in bin 0.0-0.1
+    Output: List with lower and upper bounds for each RMSE"""
     lower_bounds = []
     upper_bounds = []
     for i in range(len(rmses)):
