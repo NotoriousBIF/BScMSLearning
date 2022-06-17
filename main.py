@@ -5,7 +5,7 @@ from collections import Counter
 import re
 from matchms.filtering import default_filters
 import os
-import gensim
+
 
 path_data = "..." #enter path here
 fileloc = os.path.join(path_data, "ALL_GNPS_15_12_2021_positive_annotated.pickle")
