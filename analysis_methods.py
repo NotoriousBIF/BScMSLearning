@@ -145,7 +145,9 @@ tof_generic_overlapping = set(TOF_inchikeys).intersection(set(generic_inchis))
 ft_generic_overlapping = set(ft_inchikeys).intersection(set(generic_inchis))
 
 def peak_counter(dataset: list):
-    """Returns the average amount of peaks per spectrum for a dataset of any size"""
+    """Returns the average amount of peaks per spectrum for a dataset of any size
+    dataset: a list of mass spectra
+    output: amount of peaks per spectrum, average peaks per spectrum, total amount of peaks in a dataset """
     peaks = [d.peaks.intensities.size for d in dataset]
     average_peaks_per_spectrum = sum(peaks)/len(peaks)
     peak_occurrences = Counter(peaks)
